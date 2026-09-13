@@ -1,0 +1,5 @@
+.DS_Store
+.env
+.env.local
+.db-password.local
+supabase/.temp/

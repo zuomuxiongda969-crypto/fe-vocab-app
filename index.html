@@ -1,0 +1,91 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>基本情報単語帳</title>
+<meta name="theme-color" content="#1a56db" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="stylesheet" href="style.css" />
+
+<header class="app-header">
+  <h1>基本情報技術者試験 単語帳</h1>
+</header>
+
+<main>
+  <div class="search-bar">
+    <input id="search-input" type="search" placeholder="用語を検索 (用語・読み・分野)" autocomplete="off" />
+  </div>
+
+  <p id="empty-state" class="empty-state" hidden>まだ単語がありません。右下の + から追加してください。</p>
+  <ul id="word-list" class="word-list"></ul>
+</main>
+
+<button id="open-add-button" class="fab" aria-label="単語を追加">+</button>
+
+<dialog id="add-dialog">
+  <form id="add-form" method="dialog">
+    <h2 id="dialog-title">単語を追加</h2>
+
+    <label>
+      用語
+      <input id="term" name="term" type="text" required placeholder="e.g. TCP/IP, 正規化, RAID5" />
+    </label>
+
+    <label>
+      読み方
+      <input id="term_yomi" name="term_yomi" type="text" placeholder="e.g. ティーシーピーアイピー" />
+    </label>
+
+    <label>
+      分野
+      <input id="category" name="category" type="text" list="category-list" placeholder="e.g. テクノロジ系-ネットワーク" />
+      <datalist id="category-list">
+        <option value="テクノロジ系-基礎理論"></option>
+        <option value="テクノロジ系-アルゴリズムとプログラミング"></option>
+        <option value="テクノロジ系-コンピュータ構成要素"></option>
+        <option value="テクノロジ系-システム構成要素"></option>
+        <option value="テクノロジ系-ソフトウェア"></option>
+        <option value="テクノロジ系-ハードウェア"></option>
+        <option value="テクノロジ系-データベース"></option>
+        <option value="テクノロジ系-ネットワーク"></option>
+        <option value="テクノロジ系-セキュリティ"></option>
+        <option value="マネジメント系-開発技術"></option>
+        <option value="マネジメント系-プロジェクトマネジメント"></option>
+        <option value="マネジメント系-サービスマネジメント"></option>
+        <option value="ストラテジ系-システム戦略"></option>
+        <option value="ストラテジ系-経営戦略"></option>
+        <option value="ストラテジ系-企業と法務"></option>
+      </datalist>
+    </label>
+
+    <button type="button" id="assist-button" class="secondary-button">AIで読み・分野・意味・例えを提案</button>
+
+    <label>
+      意味・定義
+      <textarea id="meaning" name="meaning" rows="3" placeholder="試験で問われる定義（簡潔に）"></textarea>
+    </label>
+
+    <label>
+      身近な例え
+      <textarea id="analogy" name="analogy" rows="3" placeholder="日常や実務の具体例に例えた説明"></textarea>
+    </label>
+
+    <div class="illustration-row">
+      <button type="button" id="illustration-button" class="secondary-button">イラストを今すぐ生成</button>
+      <button type="button" id="remove-illustration-button" class="secondary-button" hidden>画像を削除</button>
+      <img id="illustration-preview" alt="生成されたイラスト" hidden />
+    </div>
+    <p class="hint-text">未生成の場合、保存時に自動でイラストが作られます。</p>
+
+    <p id="add-status" class="status-text" aria-live="polite"></p>
+
+    <div class="dialog-actions">
+      <button type="button" id="delete-word-button" class="danger-button" hidden>この単語を削除</button>
+      <button type="button" id="cancel-button" class="secondary-button">キャンセル</button>
+      <button type="submit" id="save-button" class="primary-button">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="app.js"></script>
