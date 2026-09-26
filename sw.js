@@ -1,4 +1,4 @@
-const CACHE_NAME = "fe-vocab-v1";
+const CACHE_NAME = "fe-vocab-v2";
 const CORE_ASSETS = [
   "./",
   "./index.html",
@@ -25,7 +25,8 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// アプリの土台(HTML/CSS/JS)だけをキャッシュし、
+// アプリの土台(HTML/CSS/JS)はネットワーク優先(オフライン時はキャッシュにフォールバック)で取得する。
+// これにより、コード更新時にCACHE_NAMEを上げ忘れてもスマホ側が古い版のままになりにくい。
 // Supabaseへのデータ通信は常にネットワークから取得する。
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
@@ -38,6 +39,12 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
