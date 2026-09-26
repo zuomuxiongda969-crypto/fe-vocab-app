@@ -71,6 +71,18 @@ main {
   gap: 10px;
 }
 
+.date-header {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  padding: 4px 2px 0;
+  margin-top: 6px;
+}
+
+.date-header:first-child {
+  margin-top: 0;
+}
+
 .word-card {
   background: var(--card-bg);
   border: 1px solid var(--border);

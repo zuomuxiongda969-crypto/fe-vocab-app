@@ -35,6 +35,25 @@ function escapeHtml(value) {
   return div.innerHTML;
 }
 
+function toDateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function formatDateLabel(dateKey) {
+  const [y, m, d] = dateKey.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const mdw = `${m}月${d}日(${weekdays[date.getDay()]})`;
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (dateKey === toDateKey(today)) return `今日・${mdw}`;
+  if (dateKey === toDateKey(yesterday)) return `昨日・${mdw}`;
+  return mdw;
+}
+
 function renderWords(list) {
   wordListEl.innerHTML = "";
   emptyStateEl.hidden = list.length > 0 || words.length > 0;
@@ -51,7 +70,18 @@ function renderWords(list) {
   }
   emptyStateEl.hidden = true;
 
+  let currentDateKey = null;
+  let dayCount = 0;
   for (const word of list) {
+    const dateKey = toDateKey(new Date(word.created_at));
+    if (dateKey !== currentDateKey) {
+      currentDateKey = dateKey;
+      dayCount = list.filter((w) => toDateKey(new Date(w.created_at)) === dateKey).length;
+      const header = document.createElement("li");
+      header.className = "date-header";
+      header.textContent = `${formatDateLabel(dateKey)} (${dayCount}件)`;
+      wordListEl.appendChild(header);
+    }
     const li = document.createElement("li");
     li.className = "word-card";
     li.innerHTML = `
