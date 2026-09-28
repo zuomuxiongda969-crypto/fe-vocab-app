@@ -22,6 +22,7 @@ const deleteWordButtonEl = document.getElementById("delete-word-button");
 const termEl = document.getElementById("term");
 const termYomiEl = document.getElementById("term_yomi");
 const categoryEl = document.getElementById("category");
+const meaningEnEl = document.getElementById("meaning_en");
 const meaningEl = document.getElementById("meaning");
 const analogyEl = document.getElementById("analogy");
 
@@ -100,6 +101,7 @@ function renderWords(list) {
           <button type="button" class="icon-button edit-button" aria-label="編集">✎</button>
         </div>
         <div class="details" hidden>
+          ${word.meaning_en ? `<p><span class="label">英語の意味</span>${escapeHtml(word.meaning_en)}</p>` : ""}
           ${word.meaning ? `<p><span class="label">意味・定義</span>${escapeHtml(word.meaning)}</p>` : ""}
           ${word.analogy ? `<p><span class="label">身近な例え</span>${escapeHtml(word.analogy)}</p>` : ""}
         </div>
@@ -168,6 +170,7 @@ function openEditDialog(word) {
   termEl.value = word.term ?? "";
   termYomiEl.value = word.term_yomi ?? "";
   categoryEl.value = word.category ?? "";
+  meaningEnEl.value = word.meaning_en ?? "";
   meaningEl.value = word.meaning ?? "";
   analogyEl.value = word.analogy ?? "";
   pendingIllustrationUrl = word.illustration_url ?? "";
@@ -243,6 +246,7 @@ assistButtonEl.addEventListener("click", async () => {
     });
     if (result.term_yomi && !termYomiEl.value.trim()) termYomiEl.value = result.term_yomi;
     if (result.category && !categoryEl.value.trim()) categoryEl.value = result.category;
+    if (result.meaning_en) meaningEnEl.value = result.meaning_en;
     if (result.meaning) meaningEl.value = result.meaning;
     if (result.analogy) analogyEl.value = result.analogy;
     addStatusEl.textContent = "提案を反映しました。内容を確認して編集してください。";
@@ -316,6 +320,7 @@ addFormEl.addEventListener("submit", async (event) => {
     term,
     term_yomi: termYomiEl.value.trim() || null,
     category: categoryEl.value.trim() || null,
+    meaning_en: meaningEnEl.value.trim() || null,
     meaning: meaningEl.value.trim() || null,
     analogy: analogyEl.value.trim() || null,
     illustration_url: pendingIllustrationUrl || null,

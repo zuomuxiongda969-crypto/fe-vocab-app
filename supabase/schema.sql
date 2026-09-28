@@ -8,11 +8,14 @@ create table if not exists words (
   term text not null,
   term_yomi text,
   category text,
+  meaning_en text,
   meaning text,
   analogy text,
   illustration_url text,
   created_at timestamptz default now()
 );
+
+alter table words add column if not exists meaning_en text;
 
 -- 個人利用の単発アプリのため、anonキーに対して全操作を許可するシンプルなポリシーにする。
 -- 注意: このURL/anonキーを知っていれば誰でも読み書きできる構成。公開リポジトリに
