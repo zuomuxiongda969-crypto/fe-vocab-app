@@ -13,6 +13,7 @@ const openAddButtonEl = document.getElementById("open-add-button");
 const cancelButtonEl = document.getElementById("cancel-button");
 const assistButtonEl = document.getElementById("assist-button");
 const illustrationButtonEl = document.getElementById("illustration-button");
+const photoUploadInputEl = document.getElementById("photo-upload-input");
 const removeIllustrationButtonEl = document.getElementById("remove-illustration-button");
 const illustrationPreviewEl = document.getElementById("illustration-preview");
 const addStatusEl = document.getElementById("add-status");
@@ -281,6 +282,32 @@ illustrationButtonEl.addEventListener("click", async () => {
     addStatusEl.textContent = "イラスト生成に失敗しました。";
   } finally {
     illustrationButtonEl.disabled = false;
+  }
+});
+
+photoUploadInputEl.addEventListener("change", async () => {
+  const file = photoUploadInputEl.files?.[0];
+  if (!file) return;
+  addStatusEl.textContent = "写真をアップロードしています...";
+  try {
+    const ext = file.name.split(".").pop() || "jpg";
+    const fileName = `${crypto.randomUUID()}.${ext}`;
+    const { error: uploadError } = await supabase.storage
+      .from("illustrations")
+      .upload(fileName, file, { contentType: file.type || "image/jpeg", upsert: false });
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from("illustrations").getPublicUrl(fileName);
+    pendingIllustrationUrl = data.publicUrl;
+    illustrationPreviewEl.src = pendingIllustrationUrl;
+    illustrationPreviewEl.hidden = false;
+    removeIllustrationButtonEl.hidden = false;
+    addStatusEl.textContent = "写真をアップロードしました。";
+  } catch (err) {
+    console.error(err);
+    addStatusEl.textContent = "写真のアップロードに失敗しました。";
+  } finally {
+    photoUploadInputEl.value = "";
   }
 });
 

@@ -239,6 +239,13 @@ dialog::backdrop {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+.file-upload-label {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 #illustration-preview {

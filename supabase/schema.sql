@@ -44,3 +44,10 @@ create policy "public read illustrations" on storage.objects
 
 create policy "service role write illustrations" on storage.objects
   for insert with check (bucket_id = 'illustrations');
+
+-- 個人利用のため、anonキーからの手動写真アップロードも許可する。
+create policy "allow anon upload illustrations" on storage.objects
+  for insert with check (bucket_id = 'illustrations');
+
+create policy "allow anon delete illustrations" on storage.objects
+  for delete using (bucket_id = 'illustrations');
